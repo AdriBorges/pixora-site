@@ -16,8 +16,8 @@ jobs:
           python3 - <<'PY'
           import base64, io, pathlib, tarfile, gzip
           root = pathlib.Path(".").resolve()
-          raw = base64.b64decode(pathlib.Path("site-package.txt").read_text().strip())
-          with tarfile.open(fileobj=io.BytesIO(gzip.decompress(raw)), mode="r:") as archive:
+          raw = base64.b64decode("".join(pathlib.Path(f"site-package.{i}").read_text().strip() for i in range(3)))
+          with tarfile.open(fileobj=io.BytesIO(__import__("lzma").decompress(raw)), mode="r:") as archive:
               for member in archive.getmembers():
                   path = (root / member.name).resolve()
                   if not path.is_relative_to(root) or not member.isfile():
